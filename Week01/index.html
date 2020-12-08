@@ -124,12 +124,14 @@
 
     function willWin() {
         for(let i = 0; i < 3; i++) {
-            if(pattern[i * 3 + j] !== 0)
-                continue;
-            let tmp = clone(pattern);
-            tmp[i * 3 + j] = color;
-            if(check(temp, color)) {
-                return [j, i];
+            for(let j = 0; j < 3; j++) {
+                if(pattern[i * 3 + j] !== 0)
+                    continue;
+                let tmp = clone(pattern);
+                tmp[i * 3 + j] = color;
+                if(check(tmp, color)) {
+                    return [j, i];
+                }                
             }
         }
         return null;
@@ -139,20 +141,19 @@
     // 0: draw
     // -1: lost
     function bestChoice(pattern, color) {
-        let p;
-        if (p = willWin(pattern, color)) {
+        let point = willWin(pattern, color);
+        if (point) {
             return {
-                point: p,
+                point,
                 result: 1
             }
         }
 
         let result = -1;
-        let point = null;
 
         outer: for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                if (pattern[i * 3 + j]) {
+                if (pattern[i * 3 + j] !== 0) {
                     continue;
                 }
                 let temp = clone(pattern);
@@ -167,7 +168,7 @@
                 }
 
                 if(result == 1) {
-                    break ounter;
+                    break outer;
                 }
             }
         }
